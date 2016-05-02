@@ -40,8 +40,10 @@ public class Ruoka_annos {
     public void setLisuke(Ruokalaji lisuke) {
         this.lisuke = lisuke;
     }
-    
-    
+
+    public void setJalkkari(Ruokalaji jalkkari) {
+        this.jalkkari = jalkkari;
+    }
 
     public double annosHinta(Ruoka_annos annos) {
         paaruoka = getPaaruoka();

@@ -153,31 +153,31 @@ public class Gui extends Application {
         paaruoka.setPrefWidth(100);
         paaruoka.getSelectionModel().selectedIndexProperty().addListener((obs, oldSelect, newSelect) ->{
             mainCourse.setPaaruoka(paaruuat.get(newSelect.intValue()));
-            textA.appendText("Valinta: "+ paaruuat.get(newSelect.intValue()).getNimi()+"\n");
+            textA.appendText("Valinta: "+ mainCourse.getPaaruoka().toString()+"\n");
             });
         ChoiceBox lisuke1 = new ChoiceBox(FXCollections.observableArrayList (lisukkeet));
         lisuke1.setPrefWidth(100);
         lisuke1.getSelectionModel().selectedIndexProperty().addListener((obs, oldSelect, newSelect) ->{
-            mainCourse.setPaaruoka(lisukkeet.get(newSelect.intValue()));
-            textA.appendText("Valinta: "+ lisukkeet.get(newSelect.intValue()).getNimi()+"\n");
+            mainCourse.setLisuke(lisukkeet.get(newSelect.intValue()));
+            textA.appendText("Valinta: "+ mainCourse.getLisuke().toString()+"\n");
             });
         ChoiceBox kasvisruoka = new ChoiceBox(FXCollections.observableArrayList (kasvisruuat));
         kasvisruoka.setPrefWidth(100);
         kasvisruoka.getSelectionModel().selectedIndexProperty().addListener((obs, oldSelect, newSelect) ->{
             veggieCourse.setPaaruoka(kasvisruuat.get(newSelect.intValue()));
-            textA.appendText("Valinta: "+ kasvisruuat.get(newSelect.intValue()).getNimi()+"\n");
+            textA.appendText("Valinta: "+ veggieCourse.getPaaruoka().toString()+"\n");
             });
         ChoiceBox lisuke2 = new ChoiceBox(FXCollections.observableArrayList (lisukkeet));
         lisuke2.setPrefWidth(100);
         lisuke2.getSelectionModel().selectedIndexProperty().addListener((obs, oldSelect, newSelect) ->{
-            veggieCourse.setPaaruoka(lisukkeet.get(newSelect.intValue()));
-            textA.appendText("Valinta: "+ lisukkeet.get(newSelect.intValue()).getNimi()+"\n");
+            veggieCourse.setLisuke(lisukkeet.get(newSelect.intValue()));
+            textA.appendText("Valinta: "+ veggieCourse.getLisuke().toString()+"\n");
             });
         ChoiceBox jalkkari = new ChoiceBox(FXCollections.observableArrayList (jalkkarit));
         jalkkari.setPrefWidth(100);
         jalkkari.getSelectionModel().selectedIndexProperty().addListener((obs, oldSelect, newSelect) ->{
-            dessertCourse.setPaaruoka(jalkkarit.get(newSelect.intValue()));
-            textA.appendText("Valinta: "+ jalkkarit.get(newSelect.intValue()).getNimi()+"\n");
+            dessertCourse.setJalkkari(jalkkarit.get(newSelect.intValue()));
+            textA.appendText("Valinta: "+ dessertCourse.getJalkkari().toString()+"\n");
             });
         
         ArrayList <ChoiceBox> boxes = new ArrayList();
@@ -208,14 +208,7 @@ public class Gui extends Application {
         Button makeOrder = new Button();
         makeOrder.setDisable(true);
         makeOrder.setText("Tee tilaus");
-        
-        /*int taso;
-        double kysynta;
-        int halukkaat;
-        int ostajat;
-        double tulos;
-        int riittava;*/
-        
+                
         makeOrder.setOnAction((ActionEvent e) -> {
             textA.appendText("Tilaus päivälle "+Math.round(paivays)+" tehty!\n");
             paivays++;
@@ -356,11 +349,7 @@ public class Gui extends Application {
         });
         dessert.setAlignment(Pos.CENTER);
         dessert.setPrefSize(60, 20);
-        
-        /*fields(estCust,textA,lukumaarat);
-        fields(veggie,textA,lukumaarat);
-        fields(dessert,textA,lukumaarat);*/
-        
+                
         grid.setVgap(10);
         grid.setHgap(10);
         grid.add(label1, 0, 1);
@@ -372,17 +361,6 @@ public class Gui extends Application {
 
         return grid;
     }
-    //yksittäisen tekstikentän konffaus
-    /*public void fields(TextField field, TextArea textA, ArrayList <TextField> lukumaarat){
-        field.setOnKeyPressed((KeyEvent event) -> {
-            if (checkTextFields(lukumaarat)) {
-                textA.appendText(field.getText()+"\n");
-                ruokailijat.setRuokailija(Integer.parseInt(field.getText()));
-            }
-        });
-        field.setAlignment(Pos.CENTER);
-        field.setPrefSize(60, 20);
-    }*/
 
     public void close(Event e) { // ohjelman sulkemisen yhteydessä varmistus
         Alert exitAlert = new Alert(AlertType.CONFIRMATION);
@@ -424,14 +402,12 @@ public class Gui extends Application {
     
     public String calcFeedback(){
         int taso = palaute.taso(mainCourse,dessertCourse);
-        //double kysynta = mika.kysynta(mainCourse);
-        //int halukkaat = mika.halukkaat(200, kysynta);
-        //int ostajat = mika.ostajat(halukkaat, ruokailijat.getRuokailija());
-        //double tulos = mika.tulos(mainCourse, ostajat);
-        //int riittava = mika.riittava(halukkaat, ruokailijat.getRuokailija());
-        //return palaute.palaute(taso, riittava);
-        return "this is text";
-        //resText.appendText("this is text"/*palaute.palaute(taso, riittava)*/);
+        double kysynta = mika.kysynta(mainCourse);
+        int halukkaat = mika.halukkaat(200, kysynta);
+        int ostajat = mika.ostajat(halukkaat, ruokailijat.getRuokailija());
+        double tulos = mika.tulos(mainCourse, ostajat);
+        int riittava = mika.riittava(halukkaat, ruokailijat.getRuokailija());
+        return palaute.palaute(taso, riittava);
 
     }
     
