@@ -20,7 +20,7 @@ public class Kysynta {
         double kerroin2 = lisuke.getSuosio();
         double kerroin3 = (random.nextDouble()*5);
         double kysynta = 20*(kerroin*0.7+kerroin2*0.1+kerroin3*0.2);
-        return kysynta;
+        return (kysynta/100);
     }
     
     public double jalkkariKysynta(Ruoka_annos annos){
@@ -29,11 +29,11 @@ public class Kysynta {
         double kerroin = jalkkari.getSuosio();
         double kerroin2 = (random.nextDouble()*5);
         double kysynta = 20*(kerroin*0.5+kerroin2*0.5);
-        return kysynta;
+        return (kysynta/100);
     }
     
     public int halukkaat(int opiskelijat, double kysynta){//opiskelijat tarkoittaa yhteensä koulussa päivittäin käyviä oppilaita jotka valitsevat ko annoksen (lihansyöjät, kasvissyöjät)
-        int halukkaat = (int)(opiskelijat/100*kysynta);
+        int halukkaat = (int)(opiskelijat*kysynta);
         return halukkaat;
     }
     public int ostajat(int halukkaat, int ruokailija){
@@ -47,12 +47,13 @@ public class Kysynta {
     }
     
     public double tulos(Ruoka_annos annos, int ostajat){
-        
-        double myyntihinta = annos.annosMyyntiHinta(annos);
-        double tulos = ostajat*myyntihinta;
-        return tulos;
-        
+        return ostajat*annos.annosMyyntiHinta(annos);
     }
+    
+    public double jalkkariTulos(Ruoka_annos annos, int ostajat){
+        return ostajat*annos.jalkkariMyyntiHinta(annos);
+    }
+    
     public int riittava(int halukkaat, int ruokailija){
         if (ruokailija >= halukkaat){
             return 1;

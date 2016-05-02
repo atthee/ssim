@@ -49,7 +49,6 @@ public class Gui extends Application {
     Ruoka_annos mainCourse = new Ruoka_annos();
     Ruoka_annos veggieCourse = new Ruoka_annos();
     Ruoka_annos dessertCourse = new Ruoka_annos();
-    Palaute palaute = new Palaute();
     TextArea resText = new TextArea("");
     Tili sodexoTili = new Tili();
     ObservableList<Ruokalaji> paaruuat = FXCollections.observableArrayList();
@@ -295,6 +294,7 @@ public class Gui extends Application {
             jalkkari.getSelectionModel().clearSelection();
             errorMes.setVisible(false);
             startService.setDisable(true);
+            makeOrder.setDisable(true);
             saldoNum.setText(""+sodexoTili.getSaldo());
             saldoNum2.setText(""+sodexoTili.getSaldo());
             primaryStage.setScene(orderScene);
@@ -358,27 +358,12 @@ public class Gui extends Application {
         Label label3 = new Label("Jälkiruoka: ");
         label3.setFont(Font.font("Cambria", 16));
         
-        /*estCust.setOnKeyPressed((KeyEvent event) -> {
-            if (checkTextFields(lukumaarat)) {
-                ruokailijat.setRuokailija(Integer.parseInt(estCust.getText()));
-            }
-        });*/
         lukumaarat.get(0).setAlignment(Pos.CENTER);
         lukumaarat.get(0).setPrefSize(60, 20);
         
-        /*veggie.setOnKeyPressed((KeyEvent event) -> {
-            if (checkTextFields(lukumaarat)) {
-                ruokailijat.setKasvis(Integer.parseInt(veggie.getText()));
-            }
-        });*/
         lukumaarat.get(1).setAlignment(Pos.CENTER);
         lukumaarat.get(1).setPrefSize(60, 20);
         
-        /*dessert.setOnKeyPressed((KeyEvent event) -> {
-            if (checkTextFields(lukumaarat)) {
-                ruokailijat.setJalkkari(Integer.parseInt(dessert.getText()));
-            }
-        });*/
         lukumaarat.get(2).setAlignment(Pos.CENTER);
         lukumaarat.get(2).setPrefSize(60, 20);
                 
@@ -434,6 +419,7 @@ public class Gui extends Application {
     
     public String calcFeedback(Ruoka_annos course, int lkm, int annokset){
         Kysynta mika = new Kysynta();
+        Palaute palaute = new Palaute();
         int taso = palaute.taso(course,dessertCourse);
         double kysynta = mika.kysynta(course);
         int halukkaat = mika.halukkaat(lkm, kysynta);
@@ -450,7 +436,7 @@ public class Gui extends Application {
         double kysynta = mika.jalkkariKysynta(dessertCourse);
         int halukkaat = mika.halukkaat(200, kysynta);
         int ostajat = mika.ostajat(halukkaat, ruokailijat.getJalkkari());
-        double tulos = mika.tulos(dessertCourse, ostajat);
+        double tulos = mika.jalkkariTulos(dessertCourse, ostajat);
         sodexoTili.Pano(tulos);
         return "Jälkkäri tuotti "+ tulos+ " euroa\n";
     }

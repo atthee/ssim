@@ -46,15 +46,15 @@ public class Ruoka_annos {
     }
 
     public double annosHinta(Ruoka_annos annos) {
-        paaruoka = getPaaruoka();
-        lisuke = getLisuke();
+        paaruoka = annos.getPaaruoka();
+        lisuke = annos.getLisuke();
         double hinta = ((lisuke.getOstohinta()) + (paaruoka.getOstohinta()));
         return hinta;
 
     }
 
     public double jalkkariHinta(Ruoka_annos annos) {
-        jalkkari = getJalkkari();
+        jalkkari = annos.getJalkkari();
         double hinta = jalkkari.getOstohinta();
         return hinta;
     }
@@ -85,14 +85,14 @@ public class Ruoka_annos {
     }
     
     public double annosMyyntiHinta(Ruoka_annos annos){
-        paaruoka = getPaaruoka();
-        lisuke = getLisuke();
+        paaruoka = annos.getPaaruoka();
+        lisuke = annos.getLisuke();
         double hinta = ((lisuke.getMyyntihinta()) + (paaruoka.getMyyntihinta()));
         return hinta;
     }
 
     public double jalkkariMyyntiHinta(Ruoka_annos annos){
-        jalkkari = getJalkkari();
+        jalkkari = annos.getJalkkari();
         double hinta = jalkkari.getMyyntihinta();
         return hinta;
     }
