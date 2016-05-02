@@ -50,8 +50,8 @@ public class Gui extends Application {
     Ruoka_annos veggieCourse = new Ruoka_annos();
     Ruoka_annos dessertCourse = new Ruoka_annos();
     Palaute palaute = new Palaute();
-    Kysynta mika = new Kysynta();
     TextArea resText = new TextArea("");
+    Tili sodexoTili = new Tili();
     ObservableList<Ruokalaji> paaruuat = FXCollections.observableArrayList();
     ObservableList<Ruokalaji> lisukkeet = FXCollections.observableArrayList();
     ObservableList<Ruokalaji> jalkkarit = FXCollections.observableArrayList();
@@ -62,12 +62,22 @@ public class Gui extends Application {
         // Oliot ja muuttujat
         Map<Double,Double> fbHistory = new HashMap();
         double rahaMeno;
-        Tili sodexoTili = new Tili();
+        Tilaus tilaus = new Tilaus();
         sodexoTili.Pano(1000.0);
+        Label saldoNum = new Label (""+sodexoTili.getSaldo());
+        Label saldoNum2 = new Label (""+sodexoTili.getSaldo());
         ArrayList<Ruoka_annos> tanaan = new ArrayList();
         ArrayList<Ruoka_annos> huomenna = new ArrayList();
         Label errorMes = new Label("This is text");
-
+        
+        TextField estCust = new TextField();
+        TextField veggie = new TextField();
+        TextField dessert = new TextField();
+        ArrayList <TextField> lukumaarat = new ArrayList();
+        lukumaarat.add(estCust);
+        lukumaarat.add(veggie);
+        lukumaarat.add(dessert);
+        
         Ruokalaji kanaKastike = new Ruokalaji("Kanakastike", 2.0, 1.5, 3.5);
         Ruokalaji riisi = new Ruokalaji("Riisi", 0.6, 0.1, 1.0);
         Ruokalaji ohukaiset = new Ruokalaji("Ohukaiset ja hillo", 0.6, 0.3, 4.2);
@@ -120,35 +130,48 @@ public class Gui extends Application {
         
         VBox saldoBox = new VBox();
         Label saldoText = new Label ("Saldo:");
-        Label saldoNum = new Label (""+sodexoTili.getSaldo());
         saldoBox.getChildren().addAll(saldoText,saldoNum);
         saldoBox.setAlignment(Pos.CENTER_LEFT);
         
-        Button btn1 = new Button();
         Button makeOrder = new Button();
-        
-        btn1.setText("Liian vähän ruokaa");
-        btn1.setPrefSize(145, 20);
-        btn1.setOnAction((ActionEvent event) -> {
-            textA.appendText("Liian vähän ruokaa\n");
-        });
-        
-        makeOrder.setDisable(true);
+        Button startService = new Button();
         makeOrder.setText("Tee tilaus");
-        makeOrder.setOnAction((ActionEvent e) -> {
+        startService.setText("Aloita ruokailu");
+        makeOrder.setDisable(true);
+        startService.setDisable(true);
+        
+        makeOrder.setOnAction((ActionEvent event) -> {
+            
             textA.appendText("Tilaus päivälle "+Math.round(paivays)+" tehty!\n");
-            paivays++;
             erMesVis = !erMesVis;
             errorMes.setVisible(erMesVis);
+            ruokailijat.setRuokailija(Integer.parseInt(estCust.getText()));
+            ruokailijat.setKasvis(Integer.parseInt(veggie.getText()));
+            ruokailijat.setJalkkari(Integer.parseInt(dessert.getText()));
+            startService.setDisable(false);
+            double minus = tilaus.teeTilaus(ruokailijat.getRuokailija(),
+                ruokailijat.getKasvis(),ruokailijat.getJalkkari(), mainCourse, veggieCourse, dessertCourse);
+            sodexoTili.Otto(minus);
+            saldoNum.setText(""+sodexoTili.getSaldo());
+            saldoNum2.setText(""+sodexoTili.getSaldo());
+            textA.appendText("Saldo väheni " + minus + " eurolla\n");
+            
+        });
+        
+        startService.setOnAction((ActionEvent e) -> {
+            paivays++;
             primaryStage.setScene(resultScene);
-            resText.appendText(calcFeedback()+"\n");
-            //calcFeedback();
+            resText.appendText(calcFeedback(mainCourse, 200, ruokailijat.getRuokailija())+"\n");
+            resText.appendText(calcFeedback(veggieCourse, 50, ruokailijat.getKasvis())+"\n");
+            resText.appendText(calcDessert());
+            saldoNum.setText(""+sodexoTili.getSaldo());
+            saldoNum2.setText(""+sodexoTili.getSaldo());
         });
         HBox hbox = new HBox();
         hbox.setSpacing(20);
         hbox.setPadding(new Insets(0,10,0,10));
         hbox.setStyle("-fx-background-color: #B0DAFF;");
-        hbox.getChildren().addAll(btn1, makeOrder);
+        hbox.getChildren().addAll(makeOrder, startService);
         hbox.setAlignment(Pos.CENTER_LEFT);        
         
         BorderPane footer = new BorderPane();
@@ -223,7 +246,7 @@ public class Gui extends Application {
         
         VBox query = new VBox();
         query.setPadding(new Insets(20,20,20,20));
-        query.getChildren().addAll(createFields(textA),selectors);
+        query.getChildren().addAll(createFields(textA, lukumaarat),selectors);
         query.setSpacing(20);
         borderpane.setLeft(query);
         
@@ -233,19 +256,7 @@ public class Gui extends Application {
         VBox middle = new VBox();
         errorMes.setTextFill(Color.RED);
         errorMes.setVisible(erMesVis);
-        makeOrder.setDisable(true);
-        makeOrder.setText("Tee tilaus");
-                
-        makeOrder.setOnAction((ActionEvent e) -> {
-            textA.appendText("Tilaus päivälle "+Math.round(paivays)+" tehty!\n");
-            paivays++;
-            erMesVis = !erMesVis;
-            errorMes.setVisible(erMesVis);
-            primaryStage.setScene(resultScene);
-            resText.appendText(calcFeedback()+"\n");
-            //calcFeedback();
-        });
-        
+                        
         checkValues(makeOrder, boxes);
         
 
@@ -283,7 +294,9 @@ public class Gui extends Application {
             lisuke2.getSelectionModel().clearSelection();
             jalkkari.getSelectionModel().clearSelection();
             errorMes.setVisible(false);
-            makeOrder.setDisable(true);
+            startService.setDisable(true);
+            saldoNum.setText(""+sodexoTili.getSaldo());
+            saldoNum2.setText(""+sodexoTili.getSaldo());
             primaryStage.setScene(orderScene);
         });
         Rectangle rect = new Rectangle(300,300);
@@ -315,7 +328,6 @@ public class Gui extends Application {
         
         VBox saldoBox2 = new VBox();
         Label saldoText2 = new Label ("Saldo:");
-        Label saldoNum2 = new Label (""+sodexoTili.getSaldo());
         saldoBox2.getChildren().addAll(saldoText2,saldoNum2);
         saldoBox2.setAlignment(Pos.CENTER_LEFT);
         
@@ -336,7 +348,7 @@ public class Gui extends Application {
     //--------------------------------------------
     //--------------------------------------------
     
-    public GridPane createFields(TextArea textA) { // luodaan tekstikentät
+    public GridPane createFields(TextArea textA, ArrayList<TextField> lukumaarat) { // luodaan tekstikentät
         GridPane grid = new GridPane();
         
         Label label1 = new Label("Ruokalijat: ");
@@ -345,46 +357,39 @@ public class Gui extends Application {
         label2.setFont(Font.font("Cambria", 16));
         Label label3 = new Label("Jälkiruoka: ");
         label3.setFont(Font.font("Cambria", 16));
-        TextField estCust = new TextField();
-        TextField veggie = new TextField();
-        TextField dessert = new TextField();
-        ArrayList <TextField> lukumaarat = new ArrayList();
-        lukumaarat.add(estCust);
-        lukumaarat.add(veggie);
-        lukumaarat.add(dessert);
         
-        estCust.setOnKeyPressed((KeyEvent event) -> {
+        /*estCust.setOnKeyPressed((KeyEvent event) -> {
             if (checkTextFields(lukumaarat)) {
                 ruokailijat.setRuokailija(Integer.parseInt(estCust.getText()));
             }
-        });
-        estCust.setAlignment(Pos.CENTER);
-        estCust.setPrefSize(60, 20);
+        });*/
+        lukumaarat.get(0).setAlignment(Pos.CENTER);
+        lukumaarat.get(0).setPrefSize(60, 20);
         
-        veggie.setOnKeyPressed((KeyEvent event) -> {
+        /*veggie.setOnKeyPressed((KeyEvent event) -> {
             if (checkTextFields(lukumaarat)) {
                 ruokailijat.setKasvis(Integer.parseInt(veggie.getText()));
             }
-        });
-        veggie.setAlignment(Pos.CENTER);
-        veggie.setPrefSize(60, 20);
+        });*/
+        lukumaarat.get(1).setAlignment(Pos.CENTER);
+        lukumaarat.get(1).setPrefSize(60, 20);
         
-        dessert.setOnKeyPressed((KeyEvent event) -> {
+        /*dessert.setOnKeyPressed((KeyEvent event) -> {
             if (checkTextFields(lukumaarat)) {
                 ruokailijat.setJalkkari(Integer.parseInt(dessert.getText()));
             }
-        });
-        dessert.setAlignment(Pos.CENTER);
-        dessert.setPrefSize(60, 20);
+        });*/
+        lukumaarat.get(2).setAlignment(Pos.CENTER);
+        lukumaarat.get(2).setPrefSize(60, 20);
                 
         grid.setVgap(10);
         grid.setHgap(10);
         grid.add(label1, 0, 1);
         grid.add(label2, 0, 2);
         grid.add(label3, 0, 3);
-        grid.add(estCust, 1, 1);
-        grid.add(veggie, 1, 2);
-        grid.add(dessert, 1, 3);
+        grid.add(lukumaarat.get(0), 1, 1);
+        grid.add(lukumaarat.get(1), 1, 2);
+        grid.add(lukumaarat.get(2), 1, 3);
 
         return grid;
     }
@@ -427,15 +432,27 @@ public class Gui extends Application {
         return true;
     }
     
-    public String calcFeedback(){
-        int taso = palaute.taso(mainCourse,dessertCourse);
-        double kysynta = mika.kysynta(mainCourse);
-        int halukkaat = mika.halukkaat(200, kysynta);
-        int ostajat = mika.ostajat(halukkaat, ruokailijat.getRuokailija());
-        double tulos = mika.tulos(mainCourse, ostajat);
-        int riittava = mika.riittava(halukkaat, ruokailijat.getRuokailija());
+    public String calcFeedback(Ruoka_annos course, int lkm, int annokset){
+        Kysynta mika = new Kysynta();
+        int taso = palaute.taso(course,dessertCourse);
+        double kysynta = mika.kysynta(course);
+        int halukkaat = mika.halukkaat(lkm, kysynta);
+        int ostajat = mika.ostajat(halukkaat, annokset);
+        double tulos = mika.tulos(course, ostajat);
+        int riittava = mika.riittava(halukkaat, annokset);
+        sodexoTili.Pano(tulos);
+        resText.appendText("Rahaa tuli tänään "+ tulos + " euroa\n");
         return palaute.palaute(taso, riittava);
-
+    }
+    
+    public String calcDessert(){
+        Kysynta mika = new Kysynta();
+        double kysynta = mika.jalkkariKysynta(dessertCourse);
+        int halukkaat = mika.halukkaat(200, kysynta);
+        int ostajat = mika.ostajat(halukkaat, ruokailijat.getJalkkari());
+        double tulos = mika.tulos(dessertCourse, ostajat);
+        sodexoTili.Pano(tulos);
+        return "Jälkkäri tuotti "+ tulos+ " euroa\n";
     }
     
     /**
