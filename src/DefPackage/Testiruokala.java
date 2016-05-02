@@ -28,14 +28,14 @@ public class Testiruokala {
         ArrayList<Ruoka_annos> tanaan = new ArrayList();
         ArrayList<Ruoka_annos> huomenna = new ArrayList();
 
-        Ruokalaji kanaKastike = new Ruokalaji("Kanakastike", 2.0, 1.5, 3.5, 1);
-        Ruokalaji riisi = new Ruokalaji("Riisi", 0.6, 0.1, 1.0, 3);
-        Ruokalaji ohukaiset = new Ruokalaji("Ohukaiset ja hillo", 0.6, 0.3, 4.2, 4);
-        Ruokalaji linssiPata = new Ruokalaji("Linssipata", 1.8, 1.1, 2.4, 2);
-        Ruokalaji peruna = new Ruokalaji("Peruna", 0.6, 0.2, 1.2, 3);
-        Ruokalaji lihaPulla = new Ruokalaji("Lihapullat", 2.0, 1.5, 3.5, 1);
-        Ruokalaji papuKastike = new Ruokalaji("Papukastike", 1.8, 1.0, 2.0, 2);
-        Ruokalaji marjaPiirakka = new Ruokalaji("Marjapiirakka", 0.6, 0.2, 3.0, 4);
+        Ruokalaji kanaKastike = new Ruokalaji("Kanakastike", 2.0, 1.5, 3.5);
+        Ruokalaji riisi = new Ruokalaji("Riisi", 0.6, 0.1, 1.0);
+        Ruokalaji ohukaiset = new Ruokalaji("Ohukaiset ja hillo", 0.6, 0.3, 4.2);
+        Ruokalaji linssiPata = new Ruokalaji("Linssipata", 1.8, 1.1, 2.4);
+        Ruokalaji peruna = new Ruokalaji("Peruna", 0.6, 0.2, 1.2);
+        Ruokalaji lihaPulla = new Ruokalaji("Lihapullat", 2.0, 1.5, 3.5);
+        Ruokalaji papuKastike = new Ruokalaji("Papukastike", 1.8, 1.0, 2.0);
+        Ruokalaji marjaPiirakka = new Ruokalaji("Marjapiirakka", 0.6, 0.2, 3.0);
         
         paaruuat.add(kanaKastike);
         paaruuat.add(lihaPulla);
