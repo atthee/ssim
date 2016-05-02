@@ -18,11 +18,7 @@ public class Testiruokala {
     static Scanner lukija = new Scanner(System.in);
 
     public static void main(String[] args) {
-        
-        int paa;
-        int kasvis;
-        int jalkiruoka;
-        
+                
         double rahaMeno;
 
         ObservableList<Ruokalaji> paaruuat = FXCollections.observableArrayList();
@@ -83,19 +79,18 @@ public class Testiruokala {
         System.out.println("Paljonko ruokailijoita on tänään?");
         int maara = lukija.nextInt();
         ruokailija.setRuokailija(maara);
-        paa = ruokailija.getRuokailija();
         System.out.println("Paljonko lisäksi on näistä % kasvissyöjiä?");
-        double kasvikset = lukija.nextDouble();
-        kasvis = ruokailija.kasvis(kasvikset);
+        int kasvikset = lukija.nextInt();
+        ruokailija.setKasvis(kasvikset);
         System.out.println("Kuinka moni ottaa tänään jälkkärin?");
-        jalkiruoka = lukija.nextInt();
-        jalkiruoka = ruokailija.jalkkari(jalkiruoka);
+        int jalkiruoka = lukija.nextInt();
+        ruokailija.setJalkkari(jalkiruoka);
         /*System.out.println("Ruokailijat tänään: " + ruokailijat + ". Kasvissyöjät tänään: " + kasvis + ". Jälkiruokaa menee: " + jalkiruoka);*/
         
         Tilaus tilaus = new Tilaus();
-        rahaMeno = tilaus.teeTilaus(ruokailija.getRuokailija(), kasvis, jalkiruoka, paaruoka, kasvisruoka, jalkkari);
+        rahaMeno = tilaus.teeTilaus(ruokailija.getRuokailija(), ruokailija.getKasvis(), ruokailija.getJalkkari(), paaruoka, kasvisruoka, jalkkari);
         System.out.println("Hinta on: " + rahaMeno);
-        System.out.println(tilaus.tilausErittely(ruokailija.getRuokailija(), kasvis, jalkiruoka, paaruoka, kasvisruoka, jalkkari));
+        System.out.println(tilaus.tilausErittely(ruokailija.getRuokailija(), ruokailija.getKasvis(), ruokailija.getJalkkari(), paaruoka, kasvisruoka, jalkkari));
         
         Kysynta mika = new Kysynta();
         double kysynta = mika.kysynta(paaruoka);
@@ -104,11 +99,11 @@ public class Testiruokala {
         System.out.println(kysynta);*/
         int halukkaat = mika.halukkaat(200, kysynta);
         System.out.println(halukkaat);
-        int ostajat = mika.ostajat(halukkaat, paa);
+        int ostajat = mika.ostajat(halukkaat, ruokailija.getRuokailija());
         System.out.println(ostajat);
         double tulos = mika.tulos(paaruoka, ostajat);
         System.out.println(tulos);
-        int riittava = mika.riittava(halukkaat, paa);
+        int riittava = mika.riittava(halukkaat, ruokailija.getRuokailija());
         
         Tili sodexoTili = new Tili();
         sodexoTili.Pano(1000.0);

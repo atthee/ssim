@@ -25,13 +25,20 @@ public class Ruokailija {
     public void setRuokailija(int ruokailija) {
         this.ruokailija = ruokailija;
     }
-    public int kasvis(double osuus){
-        kasvis = (int)(ruokailija*osuus)/100;
+    public void setKasvis(int kasvis){
+        this.kasvis = kasvis;
+    }
+
+    public int getKasvis() {
         return kasvis;
     }
-    public int jalkkari(int myynti){
-        jalkkari = myynti;
+
+    public int getJalkkari() {
         return jalkkari;
+    }
+    
+    public void setJalkkari(int jalkkari){
+        this.jalkkari = jalkkari;
     }
     
 }
