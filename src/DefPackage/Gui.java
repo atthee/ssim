@@ -68,23 +68,24 @@ public class Gui extends Application {
         ArrayList<Ruoka_annos> huomenna = new ArrayList();
         Label errorMes = new Label("This is text");
 
-        Ruokalaji kanaKastike = new Ruokalaji("Kanakastike", 2.0, 1.5, 3.5, 1);
-        Ruokalaji riisi = new Ruokalaji("Riisi", 0.6, 0.1, 1.0, 3);
-        Ruokalaji ohukaiset = new Ruokalaji("Ohukaiset ja hillo", 0.6, 0.3, 4.2, 4);
-        Ruokalaji linssiPata = new Ruokalaji("Linssipata", 1.8, 1.1, 2.4, 2);
-        Ruokalaji peruna = new Ruokalaji("Peruna", 0.6, 0.2, 1.2, 3);
-        Ruokalaji lihaPulla = new Ruokalaji("Lihapullat", 2.0, 1.5, 3.5, 1);
-        Ruokalaji papuKastike = new Ruokalaji("Papukastike", 1.8, 1.0, 2.0, 2);
-        Ruokalaji marjaPiirakka = new Ruokalaji("Marjapiirakka", 0.6, 0.2, 3.0, 4);
+        Ruokalaji kanaKastike = new Ruokalaji("Kanakastike", 2.0, 1.5, 3.5);
+        Ruokalaji riisi = new Ruokalaji("Riisi", 0.6, 0.1, 1.0);
+        Ruokalaji ohukaiset = new Ruokalaji("Ohukaiset ja hillo", 0.6, 0.3, 4.2);
+        Ruokalaji linssiPata = new Ruokalaji("Linssipata", 1.8, 1.1, 2.4);
+        Ruokalaji peruna = new Ruokalaji("Peruna", 0.6, 0.2, 1.2);
+        Ruokalaji lihaPulla = new Ruokalaji("Lihapullat", 2.0, 1.5, 3.5);
+        Ruokalaji papuKastike = new Ruokalaji("Papukastike", 1.8, 1.0, 2.0);
+        Ruokalaji marjaPiirakka = new Ruokalaji("Marjapiirakka", 0.6, 0.2, 3.0);
+        Ruokalaji veriPalttu = new Ruokalaji("Veripalttu", 2.0, 1.7, 1.0);
+        Ruokalaji tilliLiha = new Ruokalaji("Tilliliha", 2.0, 1.4, 0.6);
+        Ruokalaji tacoVuoka = new Ruokalaji("Tacojauhelihavuoka", 2.0, 1.6, 3.0);
         
-        paaruuat.add(kanaKastike);
-        paaruuat.add(lihaPulla);
-        lisukkeet.add(riisi);
-        lisukkeet.add(peruna);
-        jalkkarit.add(ohukaiset);
-        jalkkarit.add(marjaPiirakka);
-        kasvisruuat.add(linssiPata);
-        kasvisruuat.add(papuKastike);
+        
+        paaruuat.addAll(kanaKastike, lihaPulla, veriPalttu, tilliLiha, tacoVuoka);
+        lisukkeet.addAll(riisi, peruna);
+        jalkkarit.addAll(ohukaiset, marjaPiirakka);
+        kasvisruuat.addAll(linssiPata, papuKastike);
+
         
         //  ENSIMMÄISEN NÄKYMÄN RYHMITTYMÄ
         BorderPane borderpane = new BorderPane();

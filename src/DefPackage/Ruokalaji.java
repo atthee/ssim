@@ -14,15 +14,13 @@ public class Ruokalaji {
     double myyntihinta;
     double ostohinta;
     double suosio;
-    int laji; //1 = pääruoka, 2 = kasvisuoka; 3 = lisuke, 4= jälkkäri//
     
     
-    public Ruokalaji(String nimi, double myyntihinta, double ostohinta, double suosio, int laji){
+    public Ruokalaji(String nimi, double myyntihinta, double ostohinta, double suosio){
         this.nimi = nimi;
         this.myyntihinta = myyntihinta;
         this.ostohinta = ostohinta;
         this.suosio = suosio;
-        this.laji = laji;
           
     }
 
@@ -42,9 +40,6 @@ public class Ruokalaji {
         return suosio;
     }
 
-    public int getLaji() {
-        return laji;
-    }
 
     @Override
     public String toString() {
