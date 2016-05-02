@@ -66,6 +66,7 @@ public class Gui extends Application {
         sodexoTili.Pano(1000.0);
         ArrayList<Ruoka_annos> tanaan = new ArrayList();
         ArrayList<Ruoka_annos> huomenna = new ArrayList();
+        Label errorMes = new Label("This is text");
 
         Ruokalaji kanaKastike = new Ruokalaji("Kanakastike", 2.0, 1.5, 3.5, 1);
         Ruokalaji riisi = new Ruokalaji("Riisi", 0.6, 0.1, 1.0, 3);
@@ -122,11 +123,38 @@ public class Gui extends Application {
         saldoBox.getChildren().addAll(saldoText,saldoNum);
         saldoBox.setAlignment(Pos.CENTER_LEFT);
         
+        Button btn1 = new Button();
+        Button makeOrder = new Button();
+        
+        btn1.setText("Liian vähän ruokaa");
+        btn1.setPrefSize(145, 20);
+        btn1.setOnAction((ActionEvent event) -> {
+            textA.appendText("Liian vähän ruokaa\n");
+        });
+        
+        makeOrder.setDisable(true);
+        makeOrder.setText("Tee tilaus");
+        makeOrder.setOnAction((ActionEvent e) -> {
+            textA.appendText("Tilaus päivälle "+Math.round(paivays)+" tehty!\n");
+            paivays++;
+            erMesVis = !erMesVis;
+            errorMes.setVisible(erMesVis);
+            primaryStage.setScene(resultScene);
+            resText.appendText(calcFeedback()+"\n");
+            //calcFeedback();
+        });
+        HBox hbox = new HBox();
+        hbox.setSpacing(20);
+        hbox.setPadding(new Insets(0,10,0,10));
+        hbox.setStyle("-fx-background-color: #B0DAFF;");
+        hbox.getChildren().addAll(btn1, makeOrder);
+        hbox.setAlignment(Pos.CENTER_LEFT);        
+        
         BorderPane footer = new BorderPane();
         footer.setStyle("-fx-background-color: #B0DAFF;");
         footer.setPadding(new Insets(10, 10, 10, 10));
         footer.setLeft(feedbacks);
-        footer.setCenter(buttons.modButtons(textA));
+        footer.setCenter(hbox); //buttons.modButtons(textA)
         footer.setRight(saldoBox);
         borderpane.setBottom(footer);
         
@@ -202,10 +230,8 @@ public class Gui extends Application {
         
         // Tee tilaus -painike
         VBox middle = new VBox();
-        Label errorMes = new Label("This is text");
         errorMes.setTextFill(Color.RED);
         errorMes.setVisible(erMesVis);
-        Button makeOrder = new Button();
         makeOrder.setDisable(true);
         makeOrder.setText("Tee tilaus");
                 
@@ -216,13 +242,13 @@ public class Gui extends Application {
             errorMes.setVisible(erMesVis);
             primaryStage.setScene(resultScene);
             resText.appendText(calcFeedback()+"\n");
-            //resText.setText(calcFeedback());
+            //calcFeedback();
         });
         
         checkValues(makeOrder, boxes);
         
 
-        middle.getChildren().addAll(errorMes,makeOrder);
+        middle.getChildren().addAll(errorMes);
         middle.setSpacing(50);
         middle.setAlignment(Pos.CENTER);
         borderpane.setCenter(middle);
