@@ -66,10 +66,10 @@ public class Gui extends Application {
         // ----------- OLIOT JA MUUTTUJAT -------------------------
         Map<Double, Double> fbHistory = new HashMap(); // päivän nro ja tyytyväisyys
         fbHistory.put(0.0, 2.0);
-        Label fbToday = new Label("Tänään: " + nf.format(fbHistory.get(paivays - 1)));
-        Label fbWeek = new Label("Viimeisin viikko: 2,00");
-        Label fbToday2 = new Label("Tänään: " + nf.format(fbHistory.get(paivays - 1)));
-        Label fbWeek2 = new Label("Viimeisin viikko: 2,00");
+        Label fbToday = new Label("Tänään: #.##");
+        Label fbWeek = new Label("Viimeisin viikko: #.##");
+        Label fbToday2 = new Label("Tänään: #.##");
+        Label fbWeek2 = new Label("Viimeisin viikko: #.##");
         Tilaus tilaus = new Tilaus();
         sodexoTili.Pano(1000.0);
         Label saldoNum = new Label("" + nf.format(sodexoTili.getSaldo()));
@@ -119,7 +119,7 @@ public class Gui extends Application {
         resultBorder.setStyle("-fx-background-color: linear-gradient(from 0% 0% to 70% 70%, #38A2FF, #DEF0FF)");
         Scene resultScene = new Scene(resultBorder, 650, 600);
 
-        // Tekstialue vasen
+        // Tekstialue oikea
         AnchorPane textBox = new AnchorPane();
         textBox.setPadding(new Insets(10, 10, 10, 10));
         textBox.setPrefSize(300.0, 300.0);
@@ -155,13 +155,17 @@ public class Gui extends Application {
             Ruoka_lista ruokalista = new Ruoka_lista(mainCourse, veggieCourse, dessertCourse);
             textA.appendText("Luonnos ruokalistasta päivälle " + Math.round(paivays) + ":\n");
             textA.appendText(ruokalista.tulostaLista());
-            ruokailijat.setRuokailija(Integer.parseInt(estCust.getText()));
-            ruokailijat.setKasvis(Integer.parseInt(veggie.getText()));
-            ruokailijat.setJalkkari(Integer.parseInt(dessert.getText()));
-            actionButton.setDisable(false);
-            double hinta = tilaus.teeTilaus(ruokailijat.getRuokailija(),
+            try {
+                ruokailijat.setRuokailija(Integer.parseInt(estCust.getText()));
+                ruokailijat.setKasvis(Integer.parseInt(veggie.getText()));
+                ruokailijat.setJalkkari(Integer.parseInt(dessert.getText()));
+                actionButton.setDisable(false);
+                double hinta = tilaus.teeTilaus(ruokailijat.getRuokailija(),
                     ruokailijat.getKasvis(), ruokailijat.getJalkkari(), mainCourse, veggieCourse, dessertCourse);
-            textA.appendText("Tilauksen hinta: " + nf.format(hinta) + " euroa\n\n");
+                textA.appendText("Tilauksen hinta: " + nf.format(hinta) + " euroa\n\n");
+            } catch (NumberFormatException nE){
+               textA.appendText("\nVain numeroita kiitos!\n");
+            }
 
         });
 
@@ -232,31 +236,32 @@ public class Gui extends Application {
         //Choice boxes (dropdownit)
         VBox selectors = new VBox();
         ChoiceBox paaruoka = new ChoiceBox(FXCollections.observableArrayList(paaruuat));
-        paaruoka.setPrefWidth(100);
+        paaruoka.setMinWidth(150);
+        paaruoka.setPrefWidth(150);
         paaruoka.getSelectionModel().selectedIndexProperty().addListener((obs, old, newSelect) -> {
             mainCourse.setPaaruoka(paaruuat.get(newSelect.intValue()));
             textA.appendText("Valinta: " + mainCourse.getPaaruoka().toString() + "\n");
         });
         ChoiceBox lisuke1 = new ChoiceBox(FXCollections.observableArrayList(lisukkeet));
-        lisuke1.setPrefWidth(100);
+        lisuke1.setMinWidth(150);
         lisuke1.getSelectionModel().selectedIndexProperty().addListener((obs, old, newSelect) -> {
             mainCourse.setLisuke(lisukkeet.get(newSelect.intValue()));
             textA.appendText("Valinta: " + mainCourse.getLisuke().toString() + "\n");
         });
         ChoiceBox kasvisruoka = new ChoiceBox(FXCollections.observableArrayList(kasvisruuat));
-        kasvisruoka.setPrefWidth(100);
+        kasvisruoka.setMinWidth(150);
         kasvisruoka.getSelectionModel().selectedIndexProperty().addListener((obs, old, newSelect) -> {
             veggieCourse.setPaaruoka(kasvisruuat.get(newSelect.intValue()));
             textA.appendText("Valinta: " + veggieCourse.getPaaruoka().toString() + "\n");
         });
         ChoiceBox lisuke2 = new ChoiceBox(FXCollections.observableArrayList(lisukkeet));
-        lisuke2.setPrefWidth(100);
+        lisuke2.setMinWidth(150);
         lisuke2.getSelectionModel().selectedIndexProperty().addListener((obs, old, newSelect) -> {
             veggieCourse.setLisuke(lisukkeet.get(newSelect.intValue()));
             textA.appendText("Valinta: " + veggieCourse.getLisuke().toString() + "\n");
         });
         ChoiceBox jalkkari = new ChoiceBox(FXCollections.observableArrayList(jalkkarit));
-        jalkkari.setPrefWidth(100);
+        jalkkari.setMinWidth(150);
         jalkkari.getSelectionModel().selectedIndexProperty().addListener((obs, old, newSelect) -> {
             dessertCourse.setJalkkari(jalkkarit.get(newSelect.intValue()));
             textA.appendText("Valinta: " + dessertCourse.getJalkkari().toString() + "\n");
@@ -271,15 +276,21 @@ public class Gui extends Application {
         
         checkValues(draftButton,lukumaarat, boxes);
         
-        selectors.getChildren().addAll(paaruoka, lisuke1, kasvisruoka, lisuke2, jalkkari);
-        selectors.setPadding(new Insets(20, 20, 20, 20));
-        selectors.setSpacing(10);
-        selectors.setAlignment(Pos.CENTER_RIGHT);
+        Label paaLabel = new Label("Pääruoka:");
+        paaLabel.setAlignment(Pos.CENTER_LEFT);
+        Label vegeLabel = new Label("Kasvisruoka:");
+        vegeLabel.setAlignment(Pos.CENTER_LEFT);
+        Label desLabel = new Label("Jälkiruoka:");
+        desLabel.setAlignment(Pos.CENTER_LEFT);
+        selectors.getChildren().addAll(paaLabel,paaruoka, lisuke1,vegeLabel, kasvisruoka, lisuke2,desLabel, jalkkari);
+        selectors.setPadding(new Insets(10, 20, 20, 20));
+        selectors.setSpacing(5);
+        selectors.setAlignment(Pos.CENTER_LEFT);
 
         VBox query = new VBox();
-        query.setPadding(new Insets(20, 20, 20, 30));
+        query.setPadding(new Insets(10, 20, 10, 20));
         query.getChildren().addAll(createFields(textA, lukumaarat), selectors);
-        query.setSpacing(20);
+        query.setSpacing(15);
         borderpane.setLeft(query);
 
         // ----------- KESKIOSA -------------------------
@@ -290,7 +301,8 @@ public class Gui extends Application {
                 + "paljonko ravintola tuottaa.\n\n"
                 + "Koulussa on n. 250 opiskelijaa ja heistä n. 20 % on kasvissyöjiä.");
         TextFlow flow = new TextFlow(midMessage);
-        flow.setMaxWidth(Region.USE_COMPUTED_SIZE);
+        flow.setMinWidth(127);
+        flow.setMaxWidth(300);
         midMessage.setFont(Font.font("System", FontWeight.BOLD, 12));
         midMessage.setLineSpacing(20);
 
@@ -303,8 +315,8 @@ public class Gui extends Application {
 
         primaryStage.setTitle("Opiskelijaravintola");
         primaryStage.setScene(orderScene);
-        primaryStage.setMinWidth(650);
-        primaryStage.setMinHeight(600);
+        primaryStage.setMinWidth(700);
+        primaryStage.setMinHeight(620);
         primaryStage.setOnCloseRequest(e -> {
             close(e);
         });
@@ -384,24 +396,24 @@ public class Gui extends Application {
     public GridPane createFields(TextArea textA, ArrayList<TextField> lukumaarat) { // luodaan tekstikentät
         GridPane grid = new GridPane();
 
-        Label label1 = new Label("Ruokalijat: ");
+        Label label1 = new Label("Pääruoka lkm: ");
         label1.setFont(Font.font("Cambria", 16));
-        Label label2 = new Label("Kasvis: ");
+        Label label2 = new Label("Kasvis lkm: ");
         label2.setFont(Font.font("Cambria", 16));
-        Label label3 = new Label("Jälkiruoka: ");
+        Label label3 = new Label("Jälkiruoka lkm: ");
         label3.setFont(Font.font("Cambria", 16));
 
         lukumaarat.get(0).setAlignment(Pos.CENTER);
-        lukumaarat.get(0).setPrefSize(60, 20);
+        lukumaarat.get(0).setPrefSize(50, 20);
 
         lukumaarat.get(1).setAlignment(Pos.CENTER);
-        lukumaarat.get(1).setPrefSize(60, 20);
+        lukumaarat.get(1).setPrefSize(50, 20);
 
         lukumaarat.get(2).setAlignment(Pos.CENTER);
-        lukumaarat.get(2).setPrefSize(60, 20);
+        lukumaarat.get(2).setPrefSize(50, 20);
 
         grid.setVgap(10);
-        grid.setHgap(10);
+        grid.setHgap(5);
         grid.add(label1, 0, 1);
         grid.add(label2, 0, 2);
         grid.add(label3, 0, 3);
