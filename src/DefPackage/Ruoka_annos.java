@@ -73,7 +73,7 @@ public class Ruoka_annos {
 
     @Override
     public String toString() {
-        return paaruoka + " " + lisuke + " " + jalkkari;
+        return paaruoka + " ja " + lisuke;
     }
 
     public ObservableList listaus(Ruokalaji paaruoka, Ruokalaji lisuke) {

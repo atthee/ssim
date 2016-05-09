@@ -72,8 +72,8 @@ public class Testiruokala {
         maanantai.ruoka(tanaan, kasvisruoka);
         maanantai.ruoka(huomenna, kasvisruoka);
       
-        maanantai.tulostaLista(tanaan, jalkkari);
-        maanantai.tulostaLista(huomenna, jalkkari);
+        maanantai.tulostaLista();
+        maanantai.tulostaLista();
         
         Ruokailija ruokailija = new Ruokailija();
         System.out.println("Paljonko ruokailijoita on tänään?");
@@ -112,7 +112,7 @@ public class Testiruokala {
         System.out.println("Tilin saldo on: " + sodexoTili.getSaldo());
         
         Palaute palaute = new Palaute();
-        int taso = palaute.taso(paaruoka, jalkkari);
+        double taso = palaute.taso(paaruoka, jalkkari);
         System.out.println(taso);
         System.out.println(palaute.palaute(taso, riittava));
         

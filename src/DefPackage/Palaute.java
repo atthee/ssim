@@ -10,7 +10,7 @@ package DefPackage;
  * @author tiialehikoinen
  */
 public class Palaute {
-    public int taso(Ruoka_annos annos, Ruoka_annos jalkkari){
+    public double taso(Ruoka_annos annos, Ruoka_annos jalkkari){
         Ruokalaji paaruoka = annos.getPaaruoka();
         Ruokalaji lisuke = annos.getLisuke();
         double kerroin = paaruoka.getSuosio();
@@ -28,12 +28,13 @@ public class Palaute {
         return 1;
     }
     
-    public String palaute(int taso, int riittava){
+    public String palaute(double taso, int riittava){
+        int taso2 = (int) taso;
         if (riittava == 0){
             return "Ruoka loppui kesken :( miksi ruokaa ei ikinä ole tarpeeksi";
         }
         else{
-            switch(taso){
+            switch(taso2){
                 case 1:
                     return "Ruoka oli pahaa :( miksi ei ole ikinä hyvää ruokaa";
                 
