@@ -6,7 +6,6 @@
 package DefPackage;
 
 import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -32,7 +31,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.Scene;
-import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.input.MouseEvent;
@@ -45,16 +43,17 @@ import javafx.stage.Stage;
  * @author attelahtinen
  */
 public class Gui extends Application {
-
+    // Instanssimuuttujat, joista suuri osa teknisistä syistä tällä tasolla
     double paivays = 1;
-    Ruokailija ruokailijat = new Ruokailija();
-    Ruoka_annos mainCourse = new Ruoka_annos();
-    Ruoka_annos veggieCourse = new Ruoka_annos();
-    Ruoka_annos dessertCourse = new Ruoka_annos();
-    TextArea resText = new TextArea("");
+    Ruokailija ruokailijat = new Ruokailija();      // Sisältää ruokailijoiden määrät
+    Ruoka_annos mainCourse = new Ruoka_annos();     // Sisältää pääruuan ja lisukkeen
+    Ruoka_annos veggieCourse = new Ruoka_annos();   // Sisältää kasvisruuan ja lisukkeen
+    Ruoka_annos dessertCourse = new Ruoka_annos();  // Sisältää jälkiruuan
+    TextArea resText = new TextArea("");            // Tulosnäkymän tyhjä tekstialue
     Tili sodexoTili = new Tili();
     DecimalFormat nf = new DecimalFormat("###0.00");
-    int btnState = 0;
+    int btnState = 0;                               // Tee tilaus -napin tilakone
+    // Listat alasvetovalikoille
     ObservableList<Ruokalaji> paaruuat = FXCollections.observableArrayList();
     ObservableList<Ruokalaji> lisukkeet = FXCollections.observableArrayList();
     ObservableList<Ruokalaji> jalkkarit = FXCollections.observableArrayList();
@@ -62,17 +61,16 @@ public class Gui extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-
         // ----------- OLIOT JA MUUTTUJAT -------------------------
-        Map<Double, Double> fbHistory = new HashMap(); // päivän nro ja tyytyväisyys
-        fbHistory.put(0.0, 2.0);
-        Label fbToday = new Label("Tänään: #.##");
+        Map<Double, Double> fbHistory = new HashMap(); // Palautehistoria: päivän nro ja tyytyväisyys
+        fbHistory.put(0.0, 1.0);        // Nollannen päivän data, jotta ekan päivän jälkee näkyy
+        Label fbToday = new Label("Tänään: #.##");              // Feedback-labelit molempiin näkymiin
         Label fbWeek = new Label("Viimeisin viikko: #.##");
         Label fbToday2 = new Label("Tänään: #.##");
         Label fbWeek2 = new Label("Viimeisin viikko: #.##");
         Tilaus tilaus = new Tilaus();
         sodexoTili.Pano(1000.0);
-        Label saldoNum = new Label("" + nf.format(sodexoTili.getSaldo()));
+        Label saldoNum = new Label("" + nf.format(sodexoTili.getSaldo()));  // saldo label
         Label saldoNum2 = new Label("" + nf.format(sodexoTili.getSaldo()));
         ArrayList<Ruoka_annos> tanaan = new ArrayList();
         ArrayList<Ruoka_annos> huomenna = new ArrayList();
@@ -85,6 +83,7 @@ public class Gui extends Application {
         lukumaarat.add(veggie);
         lukumaarat.add(dessert);
 
+        // RUOKALAJIT
         Ruokalaji kanaKastike = new Ruokalaji("Kanakastike", 2.0, 1.5, 3.5);
         Ruokalaji riisi = new Ruokalaji("Riisi", 0.6, 0.1, 1.0);
         Ruokalaji ohukaiset = new Ruokalaji("Ohukaiset ja hillo", 0.6, 0.3, 4.2);
@@ -103,7 +102,6 @@ public class Gui extends Application {
         Ruokalaji suklaaMousse = new Ruokalaji("Suklaamousse", 0.6, 0.3, 4.1);
         Ruokalaji kasvisPitsa = new Ruokalaji("Kasvispizza", 1.8, 1.5, 5.0);
         Ruokalaji salaatti = new Ruokalaji("Vihersalaatti", 0.6, 0.3, 3.8);
-
         paaruuat.addAll(kanaKastike, lihaPulla, veriPalttu, tilliLiha, tacoVuoka);
         lisukkeet.addAll(riisi, peruna, pasta, salaatti);
         jalkkarit.addAll(ohukaiset, marjaPiirakka, mangoKiisseli, suklaaMousse);
@@ -112,14 +110,14 @@ public class Gui extends Application {
         //  ENSIMMÄISEN NÄKYMÄN RYHMITTYMÄ
         BorderPane borderpane = new BorderPane();
         borderpane.setStyle("-fx-background-color: linear-gradient(from 0% 0% to 70% 70%, #6EBBFF, #DEF0FF)");
-        Scene orderScene = new Scene(borderpane, 650, 600);
+        Scene orderScene = new Scene(borderpane, 700, 620);
 
         //  TOISEN NÄKYMÄN RYHMITTYMÄ
         BorderPane resultBorder = new BorderPane();
         resultBorder.setStyle("-fx-background-color: linear-gradient(from 0% 0% to 70% 70%, #38A2FF, #DEF0FF)");
-        Scene resultScene = new Scene(resultBorder, 650, 600);
+        Scene resultScene = new Scene(resultBorder, 700, 620);
 
-        // Tekstialue oikea
+        // OIKEAN REUNAN TEKSTIALUE
         AnchorPane textBox = new AnchorPane();
         textBox.setPadding(new Insets(10, 10, 10, 10));
         textBox.setPrefSize(300.0, 300.0);
@@ -131,7 +129,7 @@ public class Gui extends Application {
         textA.setPrefSize(230, 300);
         textA.setMaxSize(230, 400);
 
-        //  Alareuna
+        //  ALAREUNAN LABELIT
         Label tyytyvaisyys = new Label("Tyytyväisyys");
         VBox feedbacks = new VBox();
         feedbacks.getChildren().addAll(tyytyvaisyys, fbToday, fbWeek);
@@ -140,16 +138,16 @@ public class Gui extends Application {
         Label saldoText = new Label("Saldo:");
         saldoBox.getChildren().addAll(saldoText, saldoNum);
         saldoBox.setAlignment(Pos.CENTER_LEFT);
-
-        Button draftButton = modButton();
-        Button actionButton = modButton();
-
+        
+        // ALAREUNAN NAPIT JA NIIDEN EVENTHANDLERIT
+        Button draftButton = modButton();   // Dropshadow-efekti toisesta metodista
         draftButton.setText("Luonnos");
-        actionButton.setText("Lähetä tilaus");
         draftButton.setDisable(true);
+        Button actionButton = modButton();
+        actionButton.setText("Lähetä tilaus");
         actionButton.setDisable(true);
 
-        // Luonnos-nappi
+        // LUONNOS-NAPPI
         draftButton.setOnAction((ActionEvent e) -> {
             textA.clear();
             Ruoka_lista ruokalista = new Ruoka_lista(mainCourse, veggieCourse, dessertCourse);
@@ -166,23 +164,24 @@ public class Gui extends Application {
             } catch (NumberFormatException nE){
                textA.appendText("\nVain numeroita kiitos!\n");
             }
-
         });
 
-        // Tee tilaus -nappi
+        // TEE TILAUS -NAPPI
         actionButton.setOnAction((ActionEvent e) -> {
-            if (btnState%2==0){ // ykkösvaihe
+            if (btnState%2==0){ // YKKÖSVAIHE
                 double hinta = tilaus.teeTilaus(ruokailijat.getRuokailija(),
                         ruokailijat.getKasvis(), ruokailijat.getJalkkari(), mainCourse, veggieCourse, dessertCourse);
-                sodexoTili.Otto(hinta);
-                textA.appendText("\nTilaus päivälle "+Math.round(paivays)+" tehty!\n"
+                double kate = sodexoTili.Otto(hinta);
+                if(kate != 0){
+                    textA.appendText("\nTilaus päivälle "+Math.round(paivays)+" tehty!\n"
                         + "\nAloita ruokailu painamalla nappia.");
-                saldoNum.setText("" + nf.format(sodexoTili.getSaldo()));
-                saldoNum2.setText("" + nf.format(sodexoTili.getSaldo()));
-                actionButton.setText("Aloita ruokailu");
-                draftButton.setDisable(true);
-                btnState++;
-            } else if (btnState%2==1) { // kakkosvaihe
+                    saldoNum.setText("" + nf.format(sodexoTili.getSaldo()));
+                    saldoNum2.setText("" + nf.format(sodexoTili.getSaldo()));
+                    actionButton.setText("Aloita ruokailu");
+                    draftButton.setDisable(true);
+                    btnState++;
+                } else {textA.appendText("\nTilauksen summa ylittää saldon!\n");}
+            } else if (btnState%2==1) { // KAKKOSVAIHE
                 primaryStage.setScene(resultScene);
                 resText.appendText("Opiskelijoiden palaute pääruuasta: "+calcFeedback(mainCourse, 200, ruokailijat.getRuokailija()) + "\n");
                 resText.appendText("Opiskelijoiden palaute kasvisruuasta: "+calcFeedback(veggieCourse, 50, ruokailijat.getKasvis()) + "\n");
